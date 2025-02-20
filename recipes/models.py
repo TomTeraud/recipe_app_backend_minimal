@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.validators import MinValueValidator
 
-from recipes.utils.s3_utils import create_presigned_url, delete_from_s3
+# from recipes.utils.s3_utils import create_presigned_url, delete_from_s3
 from recipes.utils.thumbnail_utils import manage_thumbnails
 
 from django.utils import timezone
@@ -179,25 +179,25 @@ class RecipeImage(models.Model):
             models.UniqueConstraint(fields=['recipe'], condition=models.Q(is_main_image=True), name='unique_main_image')
         ]
     
-    def generate_presigned_url_for_image(self, expiration_time=3600):
-        s3_key = self.image.name
-        return create_presigned_url(s3_key, expiration_time)
+    # def generate_presigned_url_for_image(self, expiration_time=3600):
+    #     s3_key = self.image.name
+    #     return create_presigned_url(s3_key, expiration_time)
 
-    def generate_presigned_url_for_thumbnail(self, expiration_time=3600):
-        s3_key = self.thumbnail.name
-        return create_presigned_url(s3_key, expiration_time)
+    # def generate_presigned_url_for_thumbnail(self, expiration_time=3600):
+    #     s3_key = self.thumbnail.name
+    #     return create_presigned_url(s3_key, expiration_time)
 
-    def delete(self, *args, **kwargs):
-        # Delete the image and thumbnail from S3 before removing the model instance
-        s3_key_image = self.image.name
-        s3_key_thumbnail = self.thumbnail.name if self.thumbnail else None
+    # def delete(self, *args, **kwargs):
+    #     # Delete the image and thumbnail from S3 before removing the model instance
+    #     s3_key_image = self.image.name
+    #     s3_key_thumbnail = self.thumbnail.name if self.thumbnail else None
 
-        # Delete the original image and thumbnail
-        delete_from_s3(s3_key_image)
-        if s3_key_thumbnail:
-            delete_from_s3(s3_key_thumbnail)
+    #     # Delete the original image and thumbnail
+    #     delete_from_s3(s3_key_image)
+    #     if s3_key_thumbnail:
+    #         delete_from_s3(s3_key_thumbnail)
 
-        super().delete(*args, **kwargs)
+    #     super().delete(*args, **kwargs)
         
 
     def __set_main_image(self):

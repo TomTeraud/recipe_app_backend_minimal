@@ -52,12 +52,16 @@ class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = RecipeImage
         fields = ['thumbnail_url', 'image_url']
-    
+
     def get_thumbnail_url(self, obj):
-        return obj.generate_presigned_url_for_thumbnail()
-    
+        if obj.thumbnail:  # Make sure the field exists
+            return self.context['request'].build_absolute_uri(obj.thumbnail.url)
+        return None
+
     def get_image_url(self, obj):
-        return obj.generate_presigned_url_for_image()
+        if obj.image:  # Make sure the field exists
+            return self.context['request'].build_absolute_uri(obj.image.url)
+        return None
 
 class EquipmentSerializer(LanguageMixin, serializers.ModelSerializer):
     name = serializers.SerializerMethodField()
